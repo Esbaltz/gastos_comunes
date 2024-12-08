@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 db = SQLAlchemy()
 
@@ -21,6 +22,8 @@ def create_app():
     app.config.from_object('config.Config')
 
     SingletonDB(app)  # Singleton instance of DB
+
+    migrate = Migrate(app, db)
 
     with app.app_context():
         from models import ResidentModel
