@@ -1,5 +1,6 @@
 from app import db
 from enum import Enum
+from sqlalchemy.orm import relationship
 
 class TipoResidencia(Enum):
     arrendatario = "arrendatario"
@@ -10,9 +11,12 @@ class Resident(db.Model):
     nombre = db.Column(db.String(35), nullable=False)
     tipo_residencia = db.Column(db.Enum(TipoResidencia), nullable=False)
 
+    departamentos = relationship('Departamento', back_populates='residente')  # Relación uno a muchos
+
     def serialize(self):
         return {
             'rut': self.rut,
             'nombre': self.nombre,
             'tipo_residencia': self.tipo_residencia.name,
+            'departamentos': [departamento.serialize() for departamento in self.departamentos],
         }   

@@ -17,10 +17,11 @@ class ResidentView:
             nombre = data.get('nombre')
             rut = data.get('rut')
             tipo_residencia = TipoResidencia[data['tipo_residencia']]
+            departamentos = data.get('departamentos')
             
-            new_resident = ResidentController().create_resident_controller(rut, nombre=nombre, tipo_residencia=tipo_residencia)
+            new_resident = ResidentController().create_resident_controller(rut, nombre=nombre, tipo_residencia=tipo_residencia, departamentos=departamentos)
             return jsonify({"mensaje": "Residente creado", 
-                            "residente": {"rut": new_resident.rut, "nombre": new_resident.nombre, "tipo_residencia": new_resident.tipo_residencia}}), 201
+                            "residente": {"rut": new_resident.rut, "nombre": new_resident.nombre, "tipo_residencia": new_resident.tipo_residencia, "departamentos": [dep.id_dep for dep in new_resident.departamentos]}}), 201
         
         except KeyError as e:
             return jsonify({"error": f"Falta el campo {str(e)}"}), 400
@@ -32,5 +33,5 @@ class ResidentView:
     def get_all_resident():
         # Llama al controlador para obtener todos los usuarios
         resident = ResidentController.get_resident_controller()
-        resident_list = [{"rut": resident.rut, "nombre": resident.nombre, "tipo_residencia": resident.tipo_residencia.name} for resident in resident]
+        resident_list = [{"rut": resident.rut, "nombre": resident.nombre, "tipo_residencia": resident.tipo_residencia.name, "departamentos": [dep.id_dep for dep in resident.departamentos]} for resident in resident]
         return jsonify({"residentes": resident_list}), 200
