@@ -11,7 +11,7 @@ class Resident(db.Model):
     nombre = db.Column(db.String(35), nullable=False)
     tipo_residencia = db.Column(db.Enum(TipoResidencia), nullable=False)
 
-    departamentos = relationship('Departamento', back_populates='residente')  # Relación uno a muchos
+    departamentos = db.relationship('Departamento', backref='resident', lazy=True)  # Relación uno a muchos
 
     def serialize(self):
         return {
